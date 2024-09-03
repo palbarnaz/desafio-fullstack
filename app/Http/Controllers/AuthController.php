@@ -46,6 +46,7 @@ class AuthController extends Controller
 
             if (!$user || !Hash::check($request->password, $user->password)) {
                 return response()->json([
+                    'success' => false,
                     'message' => 'E-mail e/ou senha inválidos.',
                 ], Response::HTTP_UNAUTHORIZED);
             };
@@ -53,6 +54,7 @@ class AuthController extends Controller
 
 
             return response()->json([
+                'success' => true,
                 'message' => 'Login feito com sucesso!',
                 'user' => $user,
                 "token" => $token
@@ -60,15 +62,18 @@ class AuthController extends Controller
         } catch (ValidationException $e) {
             // Tratar exceções de validação
             return response()->json([
+                'success' => false,
                 'message' => $e->getMessage()
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (QueryException $e) {
             // Tratar exceções de consulta ao banco de dados
             return response()->json([
+                'success' => false,
                 'message' =>  $e->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         } catch (\Throwable $e) {
             return response()->json([
+                'success' => false,
                 'message' => $e->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
