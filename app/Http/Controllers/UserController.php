@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -39,6 +40,15 @@ class UserController extends Controller
 
                 ]
             );
+
+
+            if (!UserService::isStrongPassword($request->password)) {
+                return response()->json(['success' => false, 'msg' => 'A senha precisa ser forte.'], Response::HTTP_BAD_REQUEST);
+            }
+
+            if (!UserService::isValidEmailFormat($request->email)) {
+                return response()->json(['success' => false, 'msg' => 'O e-mail precisa ser válido.'], Response::HTTP_BAD_REQUEST);
+            }
 
             $requestData = $request->all();
 

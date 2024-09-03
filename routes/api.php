@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\Route;
 Route::apiResource('/mentors', MentorController::class)->middleware(['auth:sanctum', 'admin']);
 
 
-
 Route::apiResource('/users', UserController::class)->only('store');
 
 Route::apiResource('/auth', AuthController::class);
