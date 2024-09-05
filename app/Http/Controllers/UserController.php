@@ -29,13 +29,12 @@ class UserController extends Controller
             $request->validate(
                 [
                     'name' => 'required|string',
-                    'email' => 'required|email|unique:users,email',
+                    'email' => 'required|unique:users,email',
                     'password' => 'required|string'
                 ],
                 [
                     'required' => 'O campo :attribute é obrigatório.',
                     'string' => 'O campo :attribute precisa ser uma string.',
-                    'email' => 'O campo :attribute precisa ser um e-mail válido.',
                     'unique' => 'O :attribute já está em uso.',
 
                 ]
@@ -43,11 +42,11 @@ class UserController extends Controller
 
 
             if (!UserService::isStrongPassword($request->password)) {
-                return response()->json(['success' => false, 'msg' => 'A senha precisa ser forte.'], Response::HTTP_BAD_REQUEST);
+                return response()->json(['success' => false, 'message' => 'A senha precisa ser forte.'], Response::HTTP_BAD_REQUEST);
             }
 
             if (!UserService::isValidEmailFormat($request->email)) {
-                return response()->json(['success' => false, 'msg' => 'O e-mail precisa ser válido.'], Response::HTTP_BAD_REQUEST);
+                return response()->json(['success' => false, 'message' => 'O e-mail precisa ser válido.'], Response::HTTP_BAD_REQUEST);
             }
 
             $requestData = $request->all();
@@ -59,7 +58,7 @@ class UserController extends Controller
 
             return response()->json([
                 'message' => 'Usuario criado com sucesso!',
-                'mentor' => $user
+                'user' => $user
             ], Response::HTTP_CREATED);
         } catch (ValidationException $e) {
             // Tratar exceções de validação
